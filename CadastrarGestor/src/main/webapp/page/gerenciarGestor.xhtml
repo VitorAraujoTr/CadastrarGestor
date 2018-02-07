@@ -1,0 +1,77 @@
+<ui:composition template="../WEB-INF/template/padrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+	<ui:define name="titulo">Gerência - SISGEST-RFB</ui:define>
+	<ui:define name="corpo">
+		<h:form id="frmPesquisa">
+			<h1>Gerenciar Gestores</h1>
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" ajax="true" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:ajaxStatus styleClass="ajax-status">
+						<f:facet name="start">
+							<h:graphicImage class="img-ajax-status" library="image"
+								name="carregando.gif" />
+						</f:facet>
+						<f:facet name="complete">
+							<h:outputText value="" />
+						</f:facet>
+					</p:ajaxStatus>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<h:panelGrid style="margin-top:10px;" columns="2">
+				<p:outputLabel value="CPF: " for="cpf-gestor" />
+				<p:inputMask mask="999.999.999-99" id="cpf-gestor" />
+				<p:outputLabel value="Nome: " for="nome-gestor" />
+				<p:inputText id="nome-gestor" />
+			</h:panelGrid>
+			<p:dataTable id="tabelaGestor" value="#{pesquisaGestorBean.gestores}"
+				var="gestor" style="margin-top: 10px"
+				emptyMessage="Nenhum gestor encontrado." rows="10" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom"
+				lazy="true" rowsPerPageTemplate="10,20,30">
+
+				<p:column headerText="CPF" style="text-align: center; width: 100px">
+					<h:outputText value="#{gestor.cpf}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText value="#{gestor.nome}" />
+				</p:column>
+				<p:column headerText="Telefone">
+					<h:outputText value="#{gestor.telefone}" />
+				</p:column>
+				<p:column headerText="Email">
+					<h:outputText value="#{gestor.email}" />
+				</p:column>
+				<p:column headerText="UF">
+					<h:outputText value="#{gestor.uf}" />
+				</p:column>
+				<p:column headerText="Nacional">
+					<h:outputText value="Nacional-ID" />
+				</p:column>
+				<p:column style="width: 100px; text-align: center">
+					<p:commandButton icon="ui-icon-trash"
+						actionListener="#{pesquisaGestorBean.excluirGestor}"
+						update="tabelaGestor">
+						<f:setPropertyActionListener value="#{gestor}"
+							target="#{pesquisaGestorBean.gestorSelecionado}" />
+						<p:confirm header="Excluir Gestor"
+							message="Tem certeza que quer deletar o Gestor?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,93 @@
+<ui:composition template="../WEB-INF/template/padrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="titulo">Cadastro - SISGEST - RFB</ui:define>
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:event listener="#{cadastroGestorBean.inicializar}" type="preRenderView"/>
+		</f:metadata>
+		<h:form id="frmCadastro">
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+			<h1>Cadastro de Gestor</h1>
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						action="#{cadastroGestorBean.salvar}" ajax="false" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:ajaxStatus styleClass="ajax-status">
+						<f:facet name="start">
+							<h:graphicImage class="img-ajax-status" library="image"
+								name="carregando.gif" />
+						</f:facet>
+						<f:facet name="complete">
+							<h:outputText value="" />
+						</f:facet>
+					</p:ajaxStatus>
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:tabView>
+				<p:tab title="Dados Cadastrais">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:outputLabel value="Nome:" for="name" />
+						<p:inputText id="name" value="#{cadastroGestorBean.gestor.nome}" required="true" maxlength="100" />
+
+						<p:outputLabel value="Cpf:" for="cpf" />
+						<p:inputMask mask="999.999.999-99" id="cpf" value="#{cadastroGestorBean.gestor.cpf}"
+							required="true" maxlength="14" />
+
+						<p:outputLabel value="Telefone:" for="telefone" />
+						<p:inputMask mask="(99)9999-9999" id="telefone" value="#{cadastroGestorBean.gestor.telefone}"
+							required="true" maxlength="14" />
+
+						<p:outputLabel value="Email:" for="email" />
+						<p:inputText id="email" value="#{cadastroGestorBean.gestor.email}" required="true" maxlength="100" />
+
+						<p:outputLabel for="uf" value="UF:" />
+						<p:selectOneMenu id="uf" value="#{cadastroGestorBean.gestor.uf}">
+							<f:selectItem itemLabel="Selecione..." itemValue="" />
+							<f:selectItems value="#{cadastroGestorBean.uf}"/>
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Gestor Regional">
+					<h:panelGrid columns="2" cellpadding="10">
+						
+						<p:outputLabel style="color:red;"
+							value="*Somente se você for Gestor Regional" />
+						<h:outputText />
+						<p:outputLabel for="regiaoFiscal" value="Região Fiscal:" />
+						<p:selectOneMenu id="regiaoFiscal" value="#{cadastroGestorBean.gestor.regional.regiaoFiscal}">
+							<f:selectItem itemLabel="Selecione..." />
+							<f:selectItems value="#{cadastroGestorBean.regionais}" var="regional" itemValue="#{regional}" itemLabel="#{regional.regiaoFiscal}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Gestor Local">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:outputLabel style="color:red;"
+							value="*Somente se você for Gestor Local" />
+						<h:outputText />
+						
+						<p:outputLabel for="unidadeFederativa" value="Unidade Federativa:" />
+						<p:selectOneMenu id="unidadeFederativa" value="#{cadastroGestorBean.unidadePai}">
+							<f:selectItem itemLabel="Selecione..." />
+							<f:selectItems value="#{cadastroGestorBean.unidadesFederativas}" var="unidadeFederativa" itemValue="#{unidadeFederativa}" itemLabel="#{unidadeFederativa.descricao}" />
+							<p:ajax listener="#{cadastroGestorBean.carregarUnidade}" update="unidadeAdministrativa" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="unidadeAdministrativa"
+							value="Unidade Administrativa:" />
+						<p:selectOneMenu id="unidadeAdministrativa" value="#{cadastroGestorBean.gestor.local.unidade.descricao}">
+							<f:selectItem itemLabel="Selecione..." />
+							<f:selectItems value="#{cadastroGestorBean.unidadesAdministrativas}" var="unidadeAdministrativa" itemValue="#{unidadeAdministrativa}" itemLabel="#{unidadeAdministrativa.descricao}" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</h:form>
+	</ui:define>
+</ui:composition>
